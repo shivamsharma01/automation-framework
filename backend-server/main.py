@@ -8,8 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from mistral import get_response, DriverManager
-
+from mistral import get_response, DriverManager, fuzzy_matching_score, cosine_similarity_spacy_score
+from exact_keyword import check_keyword_in_response
 
 origins = [
     "http://localhost",
@@ -139,14 +139,33 @@ async def file_data(file_id: str):
 async def create_item(request: UserRequest):
     driver_manager = DriverManager()
     driver_manager.init()
-    
-    headers = ['Question', 'Expected Response', 'Actual Response', 'Keyword']
-    items = [[request.question, request.expected, get_response(request.question, driver_manager), request.keyword]]
-    
+    headers = []
+    if request.question == None or request.question == '':
+        return { "status": "failure", "response": "Question required" }
+    if request.expected == None or request.expected == '':
+        return { "status": "failure", "response": "Expected Response required" }
+    if request.keyword == None or request.keyword == '':
+        return { "status": "failure", "response": "Keyword required for Assertion 2" }
+
+    headers = ['Question', 'Expected Response', 'Actual Response', 'Keyword', 'Assertion 1 (Fuzzy)', 'Assertion 1 (Text Emb..)', 'Assertion 2']
+    row = get_row(request.question, request.expected, request.keyword, driver_manager)
     driver_manager.close()
-    return { "headers": headers, "items": items }
+    return { "headers": headers, "items": [row] }
 
 
+def get_row(question, expected, keyword, driver):
+    response = get_response(question, driver)
+    assertion_1_using_fuzzy = fuzzy_matching_score(response, expected)
+    assertion_1_using_text_embedding = cosine_similarity_spacy_score(response, expected)
+    is_keyword_present = check_keyword_in_response(response, keyword)
+    if is_keyword_present == True:
+        is_keyword_present = 'True'
+    elif is_keyword_present == False:
+        is_keyword_present = 'False'
+    else:
+        is_keyword_present = 'Assertion 2 failed'
+    return [question, expected, response, keyword, assertion_1_using_fuzzy, assertion_1_using_text_embedding, is_keyword_present]
+    
 def process_file(filename: str, file_content: bytes):
     try:
         conn = get_db()

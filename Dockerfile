@@ -12,25 +12,24 @@ RUN npm run build --prod
 # Stage 2: Setup Nginx and FastAPI
 FROM python:3.11-slim AS production-stage
 
-# Set up Nginx
 RUN apt-get update && apt-get install -y nginx
 
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=build-stage /app/dist/ui-framework /usr/share/nginx/html
 
-RUN apt-get update && apt-get install -y chromium-driver wget nano
+RUN apt-get update && apt-get install -y chromium-driver
 
-# Set up FastAPI
 WORKDIR /app
 COPY backend-server/ /app
 RUN pip install --upgrade pip
 RUN pip install numexpr numpy pandas python-dateutil pytz six tzdata pydantic  
-RUN pip install uvicorn fastapi selenium fuzzywuzzy spacy scikit-learn python-Levenshtein
+RUN pip install uvicorn fastapi selenium fuzzywuzzy spacy scikit-learn python-Levenshtein together
 RUN pip install python-multipart webdriver_manager chromedriver_autoinstaller
 RUN python -m spacy download en_core_web_md
 
 ENV username="aalam.cheema@gmail.com"
 ENV password="Asurasaurus1!"
+ENV together_api_key="03489e7ac45d4902acc2a923b7cb542971ee3d1c4657f3a9fb29b9f84996b8f7"
 
 RUN mkdir -p /app/files
 RUN apt autoremove

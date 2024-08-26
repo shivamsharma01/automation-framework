@@ -86,4 +86,4 @@ def cosine_similarity_spacy_score(response, expected_answer):
     vector1 = doc1.vector
     vector2 = doc2.vector
     cosine_sim = cosine_similarity([vector1], [vector2])
-    return cosine_sim[0][0]
+    return cosine_sim[0][0].item()
