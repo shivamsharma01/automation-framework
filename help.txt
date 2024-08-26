@@ -1,0 +1,58 @@
+docker build -t angular-fastapi-app .
+
+docker run -d -p 80:80 angular-fastapi-app
+
+
+development
+conda create --name myqaautomation python=3.9
+conda activate myqaautomation
+
+pip install fastapi
+pip install uvicorn
+pip install python-multipart
+
+Open VS Code.
+Use the Command Palette (Ctrl + Shift + P or Cmd + Shift + P on macOS) and type "Python: Select Interpreter."
+Select the interpreter corresponding to your Conda environment (e.g., Python 3.x (conda)) from the list.
+
+
+uvicorn main:app --reload
+
+docker build --no-cache -t aib .
+
+docker run -d -p 80:80 -p 8000:8000 aib
+
+
+
+
+results = []
+excel_path = 'dummy.xlsx'
+df = pd.read_excel(excel_path)
+
+for index, row in df.iterrows():
+    question = row['Question']
+    expected_answer = row['Expected Answer']
+    response = row['Response']
+    
+    fuzzy_score = fuzzy_matching_score(response, expected_answer)
+    cosine_spacy_score = cosine_similarity_spacy_score(response, expected_answer)
+    cosine_sentence_transformers_score = cosine_similarity_sentence_transformers_score(response, expected_answer)
+    results.append({
+        'Question': question,
+        'Expected Answer': expected_answer,
+        'Response': response,
+        'Fuzzy Score': fuzzy_score,
+        'Cosine Spacy Score': cosine_spacy_score*100,
+        'cosine sentence Transformers Score': cosine_sentence_transformers_score*100,
+    })
+
+# Save results to a new Excel file
+result_df = pd.DataFrame(results)
+print(result_df)
+driver.quit()
+
+kill -9 $(lsof -t -i:9222)
+kill -9 $(lsof -t -i:8000)
+uvicorn main:app --host 0.0.0.0 --port 8000 & nginx -g 'daemon off;'
+conda install selenium=4.23.1
+pip install webdriver_manager
