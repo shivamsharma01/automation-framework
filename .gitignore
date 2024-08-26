@@ -1,3 +1,4 @@
 myvenv
-/myvenv
-myvenv/
+ui-framework/node_modules
+ui-framework/.angular
+ui-framework/.vscode

@@ -1,0 +1,26 @@
+<div class="container-fluid table-container mt-5">
+    <h1>Response Table</h1>
+    <div class="row header-row">
+        @for (col of header; track col) {
+        <div class="col header-col">{{col}}</div>
+        }
+    </div>
+    @for (resp of response; track resp) {
+    <div class="row resp-row">
+        @if (hasKeyWordColumn) {
+        @for (c of resp; track c; let i = $index) {
+        @if(header[i] === 'Expected Answer' || header[i] === 'Response') {
+        <div class="col resp-col"> <app-display-text [text]="c" [keyword]="resp[keywordColumnIdx]"></app-display-text>
+        </div>
+        } @else {
+        <div class="col resp-col">{{c}}</div>
+        }
+        }
+        } @else {
+        @for (c of resp; track c; let i = $index) {
+        <div class="col resp-col">{{c}}</div>
+        }
+        }
+    </div>
+    }
+</div>

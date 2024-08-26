@@ -1,0 +1,24 @@
+.table-container {
+    border: 2px solid black;
+    border-radius: 4px;
+}
+
+.header-row {
+    padding: 1px 0;
+}
+
+.header-col {
+    border: 1px solid black;
+    font-weight: 500;
+    font-size: 1.1em;
+    text-align: center;
+    padding: 5px;
+}
+
+.resp-row {
+    padding: 1px 0;
+}
+
+.resp-col {
+    border: 1px solid black;
+}
