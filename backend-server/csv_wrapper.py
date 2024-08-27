@@ -33,4 +33,4 @@ def assert_csv(filename):
     return assert_rows(input_data, filename)
 
 def write_asserted_csv(headers, data, filename):
-    pd.DataFrame(data, columns=headers).to_csv(f"{FILE_PATH}/{filename}", index=False)
+    pd.DataFrame(data, columns=headers).to_csv(f"{FILE_PATH}/{filename}.csv", index=False)
