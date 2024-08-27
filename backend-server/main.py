@@ -2,6 +2,7 @@ from fastapi import FastAPI, File, UploadFile, BackgroundTasks
 import uuid
 from fastapi.middleware.cors import CORSMiddleware
 from db import get_db
+from tinydb import Query
 from csv_wrapper import get_csv_response, get_json_response, create_csv, validate_csv, assert_csv, write_asserted_csv
 from request_model import UserRequest
 from mistral import assert_row
@@ -12,7 +13,7 @@ origins = [
 ]
 
 app = FastAPI()
-
+        
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -33,20 +34,16 @@ def process_file(filename: str):
     initiates the flow to assert input csv and 
     replace it with the asserted csv to download and query later
     '''
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("UPDATE file_status SET status = ? WHERE id = ?", ("processing", filename))
-    conn.commit()
-        
+    DB = get_db()
+    DB.update({'status': 'processing'}, Query().id == filename)
+    
     try:
         asserted_csv_data = assert_csv(filename)
         write_asserted_csv(get_headers(), asserted_csv_data, filename)
-        cursor.execute("UPDATE file_status SET status = ?, percent = 100 WHERE id = ?", ("complete", filename))
-        conn.commit()
+        DB.update({'status': 'complete', 'percent': 100 }, Query().id == filename)
     except Exception as e:
         print(f"Failed to process file {filename}: {e}")
-        cursor.execute("UPDATE file_status SET status = ? WHERE id = ?", ("failed", filename))
-        conn.commit()
+        DB.update({'status': 'failed'}, Query().id == filename)
 
 @app.get("/get-message")
 async def test():
@@ -63,18 +60,15 @@ async def upload(background_tasks: BackgroundTasks, file: UploadFile = File(...)
     '''
     myuuid = str(uuid.uuid4())
     file_content = await file.read()
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO file_status (id, percent, status) VALUES (?, ?, ?)", (myuuid, 0, "pending"))
-    conn.commit()
+    DB = get_db()
+    DB.insert({ 'id': myuuid, 'percent': 0, 'status': 'pending'})
     try:
         create_csv(myuuid, file_content)
         validate_csv(myuuid)
         background_tasks.add_task(process_file, myuuid)
     except Exception as e:
         print(f"Failed to process file {myuuid}: {e}")
-        cursor.execute("UPDATE file_status SET status = ? WHERE id = ?", ("failed", myuuid))
-        conn.commit()
+        DB.update({'status': 'failed'}, Query().id == myuuid)
     return { "uuid": myuuid }
 
 
@@ -83,12 +77,11 @@ async def get_status(file_id: str):
     '''
     Check the status of the file processing.
     '''
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT status, percent FROM file_status WHERE id = ?", (file_id,))
-    row = cursor.fetchone()
-    if row:
-        return {"status": row[0], "percent": row[1]}
+    DB = get_db()
+    rows = DB.search(Query().id == file_id)
+    
+    if len(rows) > 0:
+        return {"status": rows[0]['status'], "percent": rows[0]['percent']}
     else:
         return {"status": "not found"}
     
@@ -98,12 +91,10 @@ async def file_download(file_id: str):
     '''
     Download the csv file.
     '''
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT status, percent FROM file_status WHERE id = ?", (file_id,))
-    row = cursor.fetchone()
-    if row:
-        status = row[0] 
+    DB = get_db()
+    rows = DB.search(Query().id == file_id)
+    if len(rows) > 0:
+        status = rows[0]['status']
         if status == "complete":
             return get_csv_response(file_id)
         else:
@@ -117,12 +108,10 @@ async def file_data(file_id: str):
     '''
     Check the status of the file processing.
     '''
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT status, percent FROM file_status WHERE id = ?", (file_id,))
-    row = cursor.fetchone()    
-    if row:
-        status = row[0] 
+    DB = get_db()
+    rows = DB.search(Query().id == file_id)
+    if len(rows) > 0:
+        status = rows[0]['status']
         if status == "complete":
             return get_json_response(file_id)
         else:
