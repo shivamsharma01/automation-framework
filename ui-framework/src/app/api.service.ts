@@ -43,7 +43,7 @@ export class ApiService {
   ): Observable<ShowResponse> {
     return this.http.post<ShowResponse>(`${this.apiUrl}/user/input`, {
       question,
-      exected: answer,
+      expected: answer,
       keyword,
     });
   }
