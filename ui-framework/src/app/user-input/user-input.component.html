@@ -73,10 +73,13 @@
     <button
       type="submit"
       class="btn"
-      [ngClass]="inputForm.valid ? 'btn-success' : 'btn-secondary'"
+      [ngClass]="inputForm.valid && !loading ? 'btn-success' : 'btn-secondary'"
       [disabled]="inputForm.invalid"
     >
       Submit
     </button>
   </form>
+</div>
+<div class="container-spin">
+  <div class="loader" *ngIf="loading"></div>
 </div>

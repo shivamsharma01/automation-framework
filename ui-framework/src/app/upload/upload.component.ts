@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { ApiService } from '../api.service';
-import { interval, switchMap, takeWhile } from 'rxjs';
+import { interval, Subject, switchMap, takeUntil, takeWhile } from 'rxjs';
 import { ShowResponse } from '../dto/show-response.dto';
 
 @Component({
@@ -9,6 +9,7 @@ import { ShowResponse } from '../dto/show-response.dto';
   styleUrl: './upload.component.css'
 })
 export class UploadComponent {
+  private destroy$ = new Subject<void>();
   @Output() fileResponseEvent = new EventEmitter<ShowResponse>();
   selectedFile: File | null = null;
   uploadStatus: string = 'Idle';
@@ -41,10 +42,11 @@ export class UploadComponent {
   }
 
   pollStatus() {
-    interval(250)
+    interval(5000)
       .pipe(
         switchMap(() => this.apiService.getStatus(this.uuid)),
-        takeWhile(resp => resp.status !== 'complete' && resp.status !== 'failed', true)
+        takeWhile(resp => resp.status !== 'complete' && resp.status !== 'failed', true),
+        takeUntil(this.destroy$)
       )
       .subscribe({
         next: (resp) => {
@@ -91,5 +93,10 @@ export class UploadComponent {
         this.uploadStatus = `Download failed: ${err.message}`;
       }
     });
+  }
+  
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
