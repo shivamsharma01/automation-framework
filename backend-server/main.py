@@ -1,15 +1,10 @@
-import uvicorn
 from fastapi import FastAPI, File, UploadFile, BackgroundTasks
-from io import StringIO
 import uuid
-import sqlite3
-import threading
 from fastapi.middleware.cors import CORSMiddleware
-import pandas as pd
-from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
-from mistral import get_response, DriverManager, fuzzy_matching_score, cosine_similarity_spacy_score
-from exact_keyword import check_keyword_in_response
+from db import get_db
+from csv_wrapper import get_csv_response, get_json_response, create_csv, validate_csv, assert_csv, write_asserted_csv
+from request_model import UserRequest
+from mistral import assert_row
 
 origins = [
     "http://localhost",
@@ -26,31 +21,41 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class UserRequest(BaseModel):
-    question: str
-    expected: str
-    keyword: str
-
-thread_local = threading.local()
-
-def get_db():
-    if not hasattr(thread_local, "conn"):
-        thread_local.conn = sqlite3.connect(':memory:')
-        cursor = thread_local.conn.cursor()
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS file_status (
-                id TEXT PRIMARY KEY,
-                percent INTEGER,
-                status TEXT
-            )
-        ''')
-        thread_local.conn.commit()
-    return thread_local.conn
-
+def get_headers():
+    '''
+    Used by csv and user input as header of the response
+    '''
+    return ['Question', 'Expected Response', 'Actual Response', 'Keyword', 'Assertion 1 (Fuzzy)', 'Assertion 1 (Text Emb..)', 'Assertion 2 LLM', 'Assertion 2 contains']
+        
+def process_file(filename: str, file_content: bytes):
+    '''
+    Background task that write input csv to file storeage and 
+    initiates the flow to assert input csv and 
+    replace it with the asserted csv to download and query later
+    '''
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE file_status SET status = ? WHERE id = ?", ("processing", filename))
+    conn.commit()
+        
+    try:
+        create_csv(filename, file_content)
+        validate_csv(filename)
+        asserted_csv_data = assert_csv(filename)
+        write_asserted_csv(get_headers(), asserted_csv_data, filename)
+        cursor.execute("UPDATE file_status SET status = ?, percent = 100 WHERE id = ?", ("complete", filename))
+        conn.commit()
+    except Exception as e:
+        print(f"Failed to process file {filename}: {e}")
+        cursor.execute("UPDATE file_status SET status = ? WHERE id = ?", ("failed", filename))
+        conn.commit()
 
 @app.get("/get-message")
-async def read_root():
-    return { "message": "Congrats! This is your first API!" }
+async def test():
+    '''
+    No args get api call to test if fastapi is working
+    '''
+    return { "message": "Congrats! The app is running!" }
 
 
 @app.put("/uploadcsv")
@@ -60,12 +65,10 @@ async def upload(background_tasks: BackgroundTasks, file: UploadFile = File(...)
     '''
     myuuid = uuid.uuid4()
     file_content = await file.read()
-    background_tasks.add_task(process_file, str(myuuid), file_content)
-
     conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO file_status (id, percent, status) VALUES (?, ?, ?)", (str(myuuid), 0, "pending"))
+    conn.cursor().execute("INSERT INTO file_status (id, percent, status) VALUES (?, ?, ?)", (str(myuuid), 0, "pending"))
     conn.commit()
+    background_tasks.add_task(process_file, str(myuuid), file_content)
 
     return { "uuid": myuuid }
 
@@ -79,22 +82,16 @@ async def get_status(file_id: str):
     cursor = conn.cursor()
     cursor.execute("SELECT status, percent FROM file_status WHERE id = ?", (file_id,))
     row = cursor.fetchone()
-    if row[1] != 100:
-        if row[1] == 90:    
-            cursor.execute("UPDATE file_status SET status = ?, percent = percent + ? WHERE id = ?", ("complete", 10, file_id))
-        else:
-            cursor.execute("UPDATE file_status SET percent = percent + ? WHERE id = ?", (10, file_id))
-        conn.commit()
     if row:
         return {"status": row[0], "percent": row[1]}
     else:
-        return {"status": "not_found"}
+        return {"status": "not found"}
     
 
 @app.get("/download/{file_id}")
 async def file_download(file_id: str):
     '''
-    Check the status of the file processing.
+    Download the csv file.
     '''
     conn = get_db()
     cursor = conn.cursor()
@@ -103,10 +100,7 @@ async def file_download(file_id: str):
     if row:
         status = row[0] 
         if status == "complete":
-            df = pd.read_csv(f"files/{file_id}.csv")
-            response = StreamingResponse(StringIO(df.to_csv(index=False)), media_type="text/csv")
-            response.headers["Content-Disposition"] = "attachment; filename=export.csv"
-            return response
+            return get_csv_response(file_id)
         else:
             return { "status" : status }
     else:
@@ -125,21 +119,15 @@ async def file_data(file_id: str):
     if row:
         status = row[0] 
         if status == "complete":
-            df = pd.read_csv(f"files/{file_id}.csv")
-            headers = list(df.columns)
-            items = df.values.tolist()
-            return { "headers": headers, "items": items }
+            return get_json_response(file_id)
         else:
             return { "status" : status }
     else:
         return {"status": "not_found"}
 
 
-@app.post("/user/model")
+@app.post("/user/input")
 async def create_item(request: UserRequest):
-    driver_manager = DriverManager()
-    driver_manager.init()
-    headers = []
     if request.question == None or request.question == '':
         return { "status": "failure", "response": "Question required" }
     if request.expected == None or request.expected == '':
@@ -147,44 +135,7 @@ async def create_item(request: UserRequest):
     if request.keyword == None or request.keyword == '':
         return { "status": "failure", "response": "Keyword required for Assertion 2" }
 
-    headers = ['Question', 'Expected Response', 'Actual Response', 'Keyword', 'Assertion 1 (Fuzzy)', 'Assertion 1 (Text Emb..)', 'Assertion 2']
-    row = get_row(request.question, request.expected, request.keyword, driver_manager)
-    driver_manager.close()
-    return { "headers": headers, "items": [row] }
+    return { "headers": get_headers(), "items": [assert_row(request.question, request.expected, request.keyword)] }
 
 
-def get_row(question, expected, keyword, driver):
-    response = get_response(question, driver)
-    assertion_1_using_fuzzy = fuzzy_matching_score(response, expected)
-    assertion_1_using_text_embedding = cosine_similarity_spacy_score(response, expected)
-    is_keyword_present = check_keyword_in_response(response, keyword)
-    if is_keyword_present == True:
-        is_keyword_present = 'True'
-    elif is_keyword_present == False:
-        is_keyword_present = 'False'
-    else:
-        is_keyword_present = 'Assertion 2 failed'
-    return [question, expected, response, keyword, assertion_1_using_fuzzy, assertion_1_using_text_embedding, is_keyword_present]
     
-def process_file(filename: str, file_content: bytes):
-    try:
-        conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute("UPDATE file_status SET status = ? WHERE id = ?", ("processing", filename))
-        conn.commit()
-        with open(f"/app/files/{filename}.csv", mode="wb") as csv_file:
-            content_str = file_content.decode('utf-8')
-            buffer = StringIO(content_str)        
-            csv_file.write(buffer.getvalue().encode('utf-8'))
-        
-        buffer.close()
-        cursor.execute("UPDATE file_status SET status = ?, percent = 100 WHERE id = ?", ("complete", filename))
-        conn.commit()
-    except Exception as e:
-        cursor.execute("UPDATE file_status SET status = ? WHERE id = ?", ("failed", filename))
-        conn.commit()
-        print(f"Failed to process file {filename}: {e}")
-
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8001)
