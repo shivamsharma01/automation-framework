@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 import chromedriver_autoinstaller as chromedriver
 
 class DriverManager:
+
     def __init__(self):
         chromedriver.install(no_ssl=True)
         chrome_options = Options()
@@ -40,7 +41,6 @@ class DriverManager:
             print(e)
             self.driver.quit()
         
-
     def close(self):
         self.driver.quit()
 
@@ -66,4 +66,3 @@ class DriverManager:
         except Exception as e:
             print(e)
             return ""
-    

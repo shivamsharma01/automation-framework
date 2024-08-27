@@ -9,7 +9,7 @@
     <div class="row resp-row">
         @if (hasKeyWordColumn) {
         @for (c of resp; track c; let i = $index) {
-        @if(header[i] === 'Expected Answer' || header[i] === 'Response') {
+        @if(header[i] === 'Expected Response' || header[i] === 'Actual Response') {
         <div class="col resp-col"> <app-display-text [text]="c" [keyword]="resp[keywordColumnIdx]"></app-display-text>
         </div>
         } @else {

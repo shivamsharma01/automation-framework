@@ -12,7 +12,7 @@ export class DisplayTableComponent {
   hasKeyWordColumn: boolean;
   keywordColumnIdx: number;
   ngOnInit() {
-    const idx = this.header && this.header.findIndex(col => 'keyword' === col.toLowerCase()) || -1;
+    const idx = this.header && this.header.findIndex(col => 'Keyword' === col) || -1;
     if (idx > -1) {
       this.hasKeyWordColumn = true;
       this.keywordColumnIdx = idx;

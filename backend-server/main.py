@@ -136,6 +136,3 @@ async def create_item(request: UserRequest):
         return { "status": "failure", "response": "Keyword required for Assertion 2" }
 
     return { "headers": get_headers(), "items": [assert_row(request.question, request.expected, request.keyword)] }
-
-
-    

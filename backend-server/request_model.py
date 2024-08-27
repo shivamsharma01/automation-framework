@@ -4,4 +4,3 @@ class UserRequest(BaseModel):
     question: str
     expected: str
     keyword: str
-
