@@ -1,6 +1,6 @@
 import os
 from together import Together
-client = Together(api_key="03489e7ac45d4902acc2a923b7cb542971ee3d1c4657f3a9fb29b9f84996b8f7")
+client = Together(api_key=os.environ['together_api_key'])
 
 def check_keyword_in_response(response_text, keyword):
     prompt = (
