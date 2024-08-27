@@ -29,10 +29,10 @@ class DriverManager:
         
         try:
             email_input = self.driver.find_element(By.ID, ":R35l3:")
-            email_input.send_keys(os.environ['username'])
+            email_input.send_keys("aalam.cheema@gmail.com")
             
             password_input = self.driver.find_element(By.ID, ":R55l3:")
-            password_input.send_keys(os.environ['password'])
+            password_input.send_keys("Asurasaurus1!")
             
             submit_button = self.driver.find_element(By.CSS_SELECTOR, "button[type='submit'][value='password']")
             submit_button.click()

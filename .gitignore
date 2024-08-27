@@ -4,3 +4,4 @@ ui-framework/node_modules
 ui-framework/.angular
 ui-framework/.vscode
 backend-server/files
+db.json
