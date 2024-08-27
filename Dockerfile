@@ -27,8 +27,8 @@ RUN pip install uvicorn fastapi fuzzywuzzy spacy scikit-learn python-Levenshtein
 RUN pip install selenium webdriver_manager chromedriver_autoinstaller
 RUN python -m spacy download en_core_web_md
 
-ENV username="aalam.cheema@gmail.com"
-ENV password="Asurasaurus1!"
+ENV mistral_username="aalam.cheema@gmail.com"
+ENV mistral_password="Asurasaurus1!"
 ENV together_api_key="03489e7ac45d4902acc2a923b7cb542971ee3d1c4657f3a9fb29b9f84996b8f7"
 
 RUN mkdir -p /app/files
