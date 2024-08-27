@@ -4,12 +4,21 @@ from fuzzywuzzy import fuzz
 from sklearn.metrics.pairwise import cosine_similarity
 from exact_keyword import check_keyword_in_response
 from selenium_driver import DriverManager
+from db import get_db
 
 nlp = spacy.load('en_core_web_md')
 
-def assert_rows(input_data):
+def assert_rows(input_data, filename):
     driver_manager = DriverManager()
-    asserted_input_data = [assert_row(question, expected, keyword) for question, expected, keyword in input_data]
+    conn = get_db()
+    cursor = conn.cursor()
+    num_rows = len(input_data)
+    asserted_input_data = []
+    for i in range(num_rows):
+        question, expected, keyword = input_data[i]
+        asserted_input_data.append(assert_row(question, expected, keyword))
+        cursor.execute("UPDATE file_status SET percent = ? WHERE id = ?", (int(float((i+1)/num_rows)*100), filename))
+        conn.commit()
     driver_manager.close()
     return asserted_input_data
 

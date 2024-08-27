@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from io import StringIO
 from fastapi.responses import StreamingResponse
@@ -21,14 +22,15 @@ def create_csv(filename, file_content):
         csv_file.write(buffer.getvalue().encode('utf-8'))
         buffer.close()
 
-def write_asserted_csv(headers, data, filename):
-    pd.DataFrame(data, columns=headers).to_csv(f"{FILE_PATH}/{filename}.csv", index=False)
-
 def validate_csv(filename):
     if pd.read_csv(f"{FILE_PATH}/{filename}.csv").columns.size != 3:
+        os.remove(filename)
         raise Exception("Requires three columns - Question, Expected Answer, Keyword") 
     
 def assert_csv(filename):
     df = pd.read_csv(f"{FILE_PATH}/{filename}.csv")
-    input_data = [[row.loc[index, 0], row.loc[index, 1], row.loc[index, 2]] for index, row in df.iterrows()]
-    return assert_rows(input_data)
+    input_data = df.iloc[:, :3].values.tolist()
+    return assert_rows(input_data, filename)
+
+def write_asserted_csv(headers, data, filename):
+    pd.DataFrame(data, columns=headers).to_csv(f"{FILE_PATH}/{filename}.csv", index=False)
