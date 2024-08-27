@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FileService } from '../file.service';
+import { ApiService } from '../api.service';
 import { interval, switchMap, takeWhile } from 'rxjs';
 import { ShowResponse } from '../dto/show-response.dto';
 
@@ -15,7 +15,7 @@ export class UploadComponent {
   processing: boolean = false;
   uuid: string = '';
 
-  constructor(private fileService: FileService) {}
+  constructor(private apiService: ApiService) {}
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
@@ -26,7 +26,7 @@ export class UploadComponent {
       this.uploadStatus = 'Uploading...';
       this.processing = true;
 
-      this.fileService.uploadFile(this.selectedFile).subscribe({
+      this.apiService.uploadFile(this.selectedFile).subscribe({
         next: (uuid) => {
           this.uuid = uuid;
           this.uploadStatus = 'File uploaded successfully. Processing...';
@@ -43,7 +43,7 @@ export class UploadComponent {
   pollStatus() {
     interval(250)
       .pipe(
-        switchMap(() => this.fileService.getStatus(this.uuid)),
+        switchMap(() => this.apiService.getStatus(this.uuid)),
         takeWhile(resp => resp.status !== 'complete' && resp.status !== 'failed', true)
       )
       .subscribe({
@@ -66,18 +66,15 @@ export class UploadComponent {
   }
 
   getResponse() {
-    this.fileService.getResponse(this.uuid).subscribe({
+    this.apiService.getResponse(this.uuid).subscribe({
       next: (resp: ShowResponse) => {
         this.fileResponseEvent.emit(resp);
-      },
-      error: (err) => {
-        //;
       }
     });
   }
 
   downloadFile() {
-    this.fileService.downloadFile(this.uuid).subscribe({
+    this.apiService.downloadFile(this.uuid).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');

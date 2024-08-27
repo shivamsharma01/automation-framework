@@ -5,7 +5,7 @@
     <button (click)="cancel()" class="btn btn-danger">Cancel</button>
     <app-display-table *ngIf="resp" [header]="resp.headers" [response]="resp.items"/>
   } @else if(choice === 'input') {
-    <app-user-input/>
+    <app-user-input (fileResponseEvent)="fileResponse($event)"/>
     <button (click)="cancel()" class="btn btn-danger">Cancel</button>
     <app-display-table *ngIf="resp" [header]="resp.headers" [response]="resp.items"/>
   } @else {
