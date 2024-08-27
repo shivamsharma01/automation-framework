@@ -27,7 +27,7 @@ def get_headers():
     '''
     return ['Question', 'Expected Response', 'Actual Response', 'Keyword', 'Assertion 1 (Fuzzy)', 'Assertion 1 (Text Emb..)', 'Assertion 2 LLM', 'Assertion 2 contains']
         
-def process_file(filename: str, file_content: bytes):
+def process_file(filename: str):
     '''
     Background task that write input csv to file storeage and 
     initiates the flow to assert input csv and 
@@ -39,8 +39,6 @@ def process_file(filename: str, file_content: bytes):
     conn.commit()
         
     try:
-        create_csv(filename, file_content)
-        validate_csv(filename)
         asserted_csv_data = assert_csv(filename)
         write_asserted_csv(get_headers(), asserted_csv_data, filename)
         cursor.execute("UPDATE file_status SET status = ?, percent = 100 WHERE id = ?", ("complete", filename))
@@ -63,13 +61,20 @@ async def upload(background_tasks: BackgroundTasks, file: UploadFile = File(...)
     '''
     Upload the file and return a uuid that the client then uses to view/download results later
     '''
-    myuuid = uuid.uuid4()
+    myuuid = str(uuid.uuid4())
     file_content = await file.read()
     conn = get_db()
-    conn.cursor().execute("INSERT INTO file_status (id, percent, status) VALUES (?, ?, ?)", (str(myuuid), 0, "pending"))
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO file_status (id, percent, status) VALUES (?, ?, ?)", (myuuid, 0, "pending"))
     conn.commit()
-    background_tasks.add_task(process_file, str(myuuid), file_content)
-
+    try:
+        create_csv(myuuid, file_content)
+        validate_csv(myuuid)
+        background_tasks.add_task(process_file, myuuid)
+    except Exception as e:
+        print(f"Failed to process file {myuuid}: {e}")
+        cursor.execute("UPDATE file_status SET status = ? WHERE id = ?", ("failed", myuuid))
+        conn.commit()
     return { "uuid": myuuid }
 
 
@@ -104,7 +109,7 @@ async def file_download(file_id: str):
         else:
             return { "status" : status }
     else:
-        return {"status": "not_found"}
+        return {"status": "not found"}
 
 
 @app.get("/show/{file_id}")
@@ -123,7 +128,7 @@ async def file_data(file_id: str):
         else:
             return { "status" : status }
     else:
-        return {"status": "not_found"}
+        return {"status": "not found"}
 
 
 @app.post("/user/input")

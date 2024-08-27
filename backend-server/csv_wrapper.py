@@ -4,7 +4,7 @@ from io import StringIO
 from fastapi.responses import StreamingResponse
 from mistral import assert_rows
 
-FILE_PATH = "/app/files"
+FILE_PATH = "./files"
 def get_csv_response(filename):
     df = pd.read_csv(f"{FILE_PATH}/{filename}.csv")
     response = StreamingResponse(StringIO(df.to_csv(index=False)), media_type="text/csv")
@@ -18,7 +18,7 @@ def get_json_response(filename):
 def create_csv(filename, file_content):
     with open(f"{FILE_PATH}/{filename}.csv", mode="wb") as csv_file:
         content_str = file_content.decode('utf-8')
-        buffer = StringIO(content_str)        
+        buffer = StringIO(content_str)
         csv_file.write(buffer.getvalue().encode('utf-8'))
         buffer.close()
 

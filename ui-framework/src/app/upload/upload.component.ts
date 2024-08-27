@@ -51,7 +51,7 @@ export class UploadComponent {
           this.uploadStatus = `Processing status: ${resp.status} ${resp.percent}%`;
           if (resp.status === 'complete') {
             this.downloadFile();
-            this.getResponse()
+            this.getResponse();
             this.processing = false;
           } else if (resp.status === 'failed') {
             this.uploadStatus = 'Processing failed.';

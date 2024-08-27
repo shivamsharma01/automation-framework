@@ -17,8 +17,9 @@ def assert_rows(input_data, filename):
     for i in range(num_rows):
         question, expected, keyword = input_data[i]
         asserted_input_data.append(assert_row(question, expected, keyword))
-        cursor.execute("UPDATE file_status SET percent = ? WHERE id = ?", (int(float((i+1)/num_rows)*100), filename))
+        cursor.execute("UPDATE file_status SET percent = ? WHERE id = ?", (int(float(((i+1)*100)/num_rows)), filename))
         conn.commit()
+        
     driver_manager.close()
     return asserted_input_data
 

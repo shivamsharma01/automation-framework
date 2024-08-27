@@ -10,16 +10,19 @@ class DriverManager:
     def __init__(self):
         chromedriver.install(no_ssl=True)
         chrome_options = Options()
-        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('headless')
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument('--disable-gpu')
         chrome_options.add_argument('--window-size=1920x1080')
-        chrome_options.add_argument('--remote-debugging-port=9222')
+        chrome_options.set_capability("browserVersion", "117")
+        chrome_options.add_argument('--remote-debugging-port=0')
         chrome_options.add_argument('--ignore-ssl-errors=yes')
         chrome_options.add_argument('--ignore-certificate-errors')
-
+        chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        
         self.driver = webdriver.Chrome(options=chrome_options)
+        self.driver.service.HideCommandPromptWindow = True
         self.driver.get("https://chat.mistral.ai/login")
         
         time.sleep(2)
@@ -44,9 +47,6 @@ class DriverManager:
     def close(self):
         self.driver.quit()
 
-    def get_driver(self):
-        return self.driver
-    
     def get_question_response(self, question):
         try:
             input_box = self.driver.find_element(By.CSS_SELECTOR, "textarea[placeholder='Ask anything!']")
