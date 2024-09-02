@@ -3,6 +3,8 @@ docker build --no-cache -t shivamshivam01/aib:automation-framework .
 
 docker push shivamshivam01/aib:automation-framework
 
+docker pull shivamshivam01/aib:automation-framework
+
 docker run -d -p 80:80 -p 8000:8000 shivamshivam01/aib:automation-framework
 
 kill -9 $(lsof -t -i:9222)
