@@ -24,7 +24,8 @@ app.add_middleware(
 
 def get_headers():
     '''
-    Used by csv and user input as header of the response
+    Output:
+    Headers: Headers to display in the output csv
     '''
     return ['Question', 'Expected Response', 'Actual Response', 'Keyword', 'Assertion 1 (Fuzzy)', 'Assertion 1 (Text Emb..)', 'Assertion 2 LLM', 'Assertion 2 contains']
         
@@ -122,6 +123,12 @@ async def file_data(file_id: str):
 
 @app.post("/user/input")
 async def create_item(request: UserRequest):
+    '''
+    Input:
+    request: contains the question, response and the keyword
+    Output:
+    returns: headers and output similar to csv for the requested input
+    '''
     if request.question == None or request.question == '':
         return { "status": "failure", "response": "Question required" }
     if request.expected == None or request.expected == '':

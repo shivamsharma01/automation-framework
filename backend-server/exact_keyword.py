@@ -3,6 +3,13 @@ from together import Together
 client = Together(api_key=os.environ['together_api_key'])
 
 def check_keyword_in_response(response_text, keyword):
+    '''
+    Input:
+    response_text: mistral chat response to the input question
+    keyword: expected key token in the response
+    Output:
+    token: either true or false if present or empty string if llm fails to answer
+    '''
     prompt = (
         f"I will provide you with a text and a keyword. "
         f"Your task is to check if the keyword is present in the text (ignore case). "

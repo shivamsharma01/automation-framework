@@ -1,0 +1,10 @@
+chromedriver_autoinstaller==0.6.4
+fastapi==0.112.2
+fuzzywuzzy==0.18.0
+pandas==2.2.2
+pydantic==2.8.2
+scikit_learn==1.5.1
+selenium==4.24.0
+spacy==3.7.2
+tinydb==4.8.0
+together==1.2.9

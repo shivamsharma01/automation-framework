@@ -10,6 +10,14 @@ from tinydb import Query
 nlp = spacy.load('en_core_web_md')
 
 def assert_rows(input_data, filename):
+    '''
+    Input:
+    input_data: all the input rows containing question, response and keyword
+    filename: filename containing these questions. This filename is used to update its progress in db
+    Output:
+    asserted_data: responses to all the input rows containing question, response, actual response, keywords, fuzzy score,
+    spacy text-embeddings score, expected data validation using contains and together api prompt
+    '''
     driver_manager = DriverManager()
     num_rows = len(input_data)
     asserted_input_data = []
@@ -23,18 +31,48 @@ def assert_rows(input_data, filename):
     return asserted_input_data
 
 def assert_row(question, expected, keyword, driver_manager=None):
+    '''
+    Input:
+    question: input question to pass to the mistral chat
+    expected: the expected response
+    keyword: key token present in the response
+    driver_manager: driver_manager to fire the question to for the actual response
+    Output:
+    asserted_row: response to the input row containing question, response, actual response, keywords, fuzzy score,
+    spacy text-embeddings score, expected data validation using contains and together api prompt
+    '''
     def get_response(driver_manager, question):
         return driver_manager.get_question_response(question)
 
     def fuzzy_matching_score(response, expected_answer):
+        '''
+        Input:
+        response: the response returned by mistral
+        expected_answer: the response present in the input file
+        Output:
+        score: the score between response and expected_answer based on the fuzzy logic
+        '''
         return fuzz.ratio(response, expected_answer)
 
     def cosine_similarity_spacy_score(response, expected_answer):
+        '''
+        Input:
+        response: the response returned by mistral
+        expected_answer: the response present in the input file
+        Output:
+        score: the score between response and expected_answer based on the text-embeddings of en_core_web_md model
+        '''
         doc1, doc2 = nlp(expected_answer), nlp(response)
         cosine_sim = cosine_similarity([doc1.vector], [doc2.vector])
         return cosine_sim[0][0].item()*100
     
     def bool_to_string(token, error_string):
+        '''
+        Input:
+        token: boolean response or string
+        Output:
+        token: boolean to string conversion if possible or else a custom error msg
+        '''
         if token == True:
             token = 'True'
         elif token == False:
