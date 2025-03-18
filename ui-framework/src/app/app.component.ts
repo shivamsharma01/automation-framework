@@ -1,27 +1,16 @@
 import { Component } from '@angular/core';
-import { ShowResponse } from './dto/show-response.dto';
+import { HeaderComponent } from './header/header.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule, HeaderComponent, RouterOutlet],
 })
 export class AppComponent {
   title = 'ui-framework';
-  choice: string;
-  resp: ShowResponse | null;
-  
-  fileResponse(resp: ShowResponse) {
-    this.resp = resp;
-  }
-  
-  choiceEvent(event: string) {
-    this.choice = event;
-    this.resp = null;
-  }
-
-  cancel() {
-    this.choice = '';
-    this.resp = null;
-  }
 }

@@ -1,4 +1,15 @@
 .navbar {
     border: 2px solid black;
     border-radius: 4px;
+    padding: 0;
+}
+
+.bg-light {
+    background: black !important;
+}
+
+img {
+    max-height: 50px;
+    margin-left: 5px;
+    border-radius: 5px;
 }

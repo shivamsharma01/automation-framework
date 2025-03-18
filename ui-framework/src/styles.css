@@ -1,3 +1,30 @@
 .highlight {
-    background-color: greenyellow;
+  background-color: greenyellow;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.container-fluid {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: lightblue url("/img/john-towner-unsplash.jpg") no-repeat fixed
+    center;
+  color: white;
+}
+
+.dark-container {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8.3px);
+  -webkit-backdrop-filter: blur(8.3px);
+  border: 1px solid rgba(0, 0, 0, 0.41);
+  padding: 50px;
 }
