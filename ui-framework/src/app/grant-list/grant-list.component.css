@@ -1,0 +1,17 @@
+.table-container {
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.resp-col {
+  border: 2px solid black;
+}
+
+.cell-flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}

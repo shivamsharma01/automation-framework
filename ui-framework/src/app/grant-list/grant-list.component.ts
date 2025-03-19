@@ -11,11 +11,10 @@ import { Router } from '@angular/router';
 })
 export class GrantListComponent {
   headers: string[] = [
-    'S No.',
+    'Grant ID',
+    'Organization Name',
     'Title',
     'Category',
-    'Start Date',
-    'End Date',
     'Funds Available',
   ];
 
@@ -33,19 +32,17 @@ export class GrantListComponent {
       this.grants = [
         {
           id: 1,
+          org: 'Org 1',
           title: 'Grant 1',
           category: 'Category 1',
-          startDate: '2021-01-01',
-          endDate: '2021-12-31',
-          fundsAvailable: 1000,
+          funds: 1000,
         },
         {
           id: 2,
+          org: 'Org 2',
           title: 'Grant 2',
           category: 'Category 2',
-          startDate: '2021-01-01',
-          endDate: '2021-12-31',
-          fundsAvailable: 2000,
+          funds: 2000,
         },
       ];
     }

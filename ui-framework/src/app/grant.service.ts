@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class GrantService {
-  private apiUrl = 'https://your-api-url.com/grants';
+  private apiUrl = 'http://localhost/api/grants';
 
   constructor(private http: HttpClient) {}
 

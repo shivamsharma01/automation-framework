@@ -32,11 +32,9 @@ export class GrantRequestComponent implements OnInit {
 
   ngOnInit() {
     this.grantForm = new FormGroup({
-      organizationName: new FormControl('', [Validators.required]),
       category: new FormControl('All', [Validators.required]),
       eligibility: new FormControl('All', [Validators.required]),
       location: new FormControl('All', [Validators.required]),
-      fundingAmount: new FormControl(null, [Validators.required]),
     });
     this.eligibilityTypes = this.formDataService.getEligibilityOptions();
     this.categories = this.formDataService.getCategoryOptions();
@@ -44,10 +42,11 @@ export class GrantRequestComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.grantForm.value);
-    console.log(this.grantForm.valid);
-
-    const requestData = { category: 'Education', minFunds: 1000 };
+    const requestData = {
+      category: this.grantForm.value.category,
+      eligibility: this.grantForm.value.eligibility,
+      location: this.grantForm.value.location,
+    };
 
     this.grantService.fetchGrants(requestData).subscribe({
       next: (grants: GrantListResponse[]) =>

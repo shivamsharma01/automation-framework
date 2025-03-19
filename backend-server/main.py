@@ -1,11 +1,14 @@
-from fastapi import FastAPI, File, UploadFile, BackgroundTasks
+from fastapi import FastAPI
 import uuid
 from fastapi.middleware.cors import CORSMiddleware
 from db import get_db
 from tinydb import Query
-from csv_wrapper import get_csv_response, get_json_response, create_csv, validate_csv, assert_csv, write_asserted_csv
 from request_model import UserRequest
-from mistral import assert_row
+import requests
+import os
+import getpass
+import spacy
+from rapidfuzz import process, fuzz
 
 origins = [
     "http://localhost",
@@ -13,7 +16,7 @@ origins = [
 ]
 
 app = FastAPI()
-        
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -22,30 +25,32 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def get_headers():
-    '''
-    Output:
-    Headers: Headers to display in the output csv
-    '''
-    return ['Question', 'Expected Response', 'Actual Response', 'Keyword', 'Assertion 1 (Fuzzy)', 'Assertion 1 (Text Emb..)', 'Assertion 2 LLM', 'Assertion 2 contains']
-        
-def process_file(filename: str):
-    '''
-    Background task that write input csv to file storeage and 
-    initiates the flow to assert input csv and 
-    replace it with the asserted csv to download and query later
-    '''
-    DB = get_db()
-    DB.update({'status': 'processing'}, Query().id == filename)
-    
-    try:
-        asserted_csv_data = assert_csv(filename)
-        write_asserted_csv(get_headers(), asserted_csv_data, filename)
-        DB.update({'status': 'complete', 'percent': 100 }, Query().id == filename)
-    except Exception as e:
-        print(f"Failed to process file {filename}: {e}")
-        DB.update({'status': 'failed'}, Query().id == filename)
+nlp = spacy.load("en_core_web_md")
 
+def find_best_matches_for_eligibility(input_text):
+    input_doc = nlp(input_text.lower())
+    if input_doc is "all" or input_doc is "any":
+        return None
+    DB = get_db()
+    grants = DB.all()
+    choices = set([grant["eligibility"] for grant in grants])
+    # Use SpaCy similarity
+    similarity_scores = {(choice, input_doc.similarity(nlp(choice.lower()))) for choice in choices if input_doc.similarity(nlp(choice.lower())) > 0.8}
+    print(similarity_scores)
+    # Use Fuzzy Matching
+    choicesUsingFuzzy = process.extract(input_text, choices, scorer=fuzz.partial_ratio, limit=5)
+    print(choicesUsingFuzzy)
+    return similarity_scores
+    
+def fetch_grant_details(grant_id):
+    # Mock data – Replace this with actual API/database call
+    grants = {
+        "101": ("Education Grant", "Funding for innovative education projects", "Must have a detailed project plan and budget."),
+        "102": ("Healthcare Grant", "Support for community healthcare initiatives", "Must outline expected impact and target beneficiaries.")
+    }
+    return grants.get(str(grant_id))
+
+   
 @app.get("/get-message")
 async def test():
     '''
@@ -54,55 +59,84 @@ async def test():
     return { "message": "Congrats! The app is running!" }
 
 
-@app.put("/uploadcsv")
-async def upload(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
-    '''
-    Upload the file and return a uuid that the client then uses to view/download results later
-    '''
-    myuuid = str(uuid.uuid4())
-    file_content = await file.read()
-    DB = get_db()
-    DB.insert({ 'id': myuuid, 'percent': 0, 'status': 'pending'})
-    try:
-        create_csv(myuuid, file_content)
-        validate_csv(myuuid)
-        background_tasks.add_task(process_file, myuuid)
-    except Exception as e:
-        print(f"Failed to process file {myuuid}: {e}")
-        DB.update({'status': 'failed'}, Query().id == myuuid)
-    return { "uuid": myuuid }
+def generate_grant_application(grant_id, user_details):
+    grant = fetch_grant_details(grant_id)
+    if not grant:
+        return "Grant Not Found"
 
+    title, description, requirements = grant
 
-@app.get("/status/{file_id}")
-async def get_status(file_id: str):
-    '''
-    Check the status of the file processing.
-    '''
-    DB = get_db()
-    rows = DB.search(Query().id == file_id)
-    
-    if len(rows) > 0:
-        return {"status": rows[0]['status'], "percent": rows[0]['percent']}
+    prompt = f"""
+    You are a grant application expert. Create a complete and professional grant application form for the following grant.
+    The application should be well-structured with clear sections and formatting.
+
+    GRANT INFORMATION:
+    Title: {title}
+    Description: {description}
+    Requirements: {requirements}
+
+    APPLICANT INFORMATION:
+    Name: {user_details.get('name', '')}
+    Organization: {user_details.get('org_name', '')}
+    Project Name: {user_details.get('project_name', '')}
+    Purpose: {user_details.get('grant_purpose', '')}
+    Expected Outcomes: {user_details.get('expected_outcomes', '')}
+    Target Audience: {user_details.get('target_audience', '')}
+    Contact: {user_details.get('contact_details', '')}
+
+    Generate a complete application form with the following sections:
+    1. Executive Summary
+    2. Project Description
+    3. Objectives and Goals
+    4. Implementation Plan
+    5. Budget Breakdown
+    6. Timeline
+    7. Evaluation Metrics
+    8. Impact Assessment
+    9. Compliance Statement
+    10. References
+
+    Format the application as a professional document. Include placeholders for any missing information.
+    """
+
+    API_KEY = os.getenv("TOGETHER_API_KEY")
+    if not API_KEY:
+        API_KEY = getpass.getpass("Enter your Together AI API key: ")
+
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    data = {
+        "model": "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+        "prompt": prompt,
+        "max_tokens": 2048,
+        "temperature": 0.7,
+        "top_p": 0.9
+    }
+
+    response = requests.post(
+        "https://api.together.xyz/v1/completions",
+        headers=headers,
+        json=data
+    )
+
+    if response.status_code == 200:
+        return response.json()["choices"][0]["text"]
     else:
-        return {"status": "not found"}
-    
+        return f"Error: {response.status_code}, {response.text}"
 
-@app.get("/download/{file_id}")
-async def file_download(file_id: str):
-    '''
-    Download the csv file.
-    '''
-    DB = get_db()
-    rows = DB.search(Query().id == file_id)
-    if len(rows) > 0:
-        status = rows[0]['status']
-        if status == "complete":
-            return get_csv_response(file_id)
-        else:
-            return { "status" : status }
-    else:
-        return {"status": "not found"}
 
+user_details = {
+    "name": "John Doe",
+    "org_name": "Education First",
+    "project_name": "Tech in Education",
+    "grant_purpose": "Introducing AI tools in classrooms",
+    "expected_outcomes": "Improved learning efficiency by 20%",
+    "target_audience": "High school students",
+    "contact_details": "john.doe@example.com"
+}
 
 @app.get("/show/{file_id}")
 async def file_data(file_id: str):
@@ -114,7 +148,7 @@ async def file_data(file_id: str):
     if len(rows) > 0:
         status = rows[0]['status']
         if status == "complete":
-            return get_json_response(file_id)
+            return ""
         else:
             return { "status" : status }
     else:
@@ -122,7 +156,7 @@ async def file_data(file_id: str):
 
 
 @app.post("/user/input")
-async def create_item(request: UserRequest):
+async def get_list(request: UserRequest):
     '''
     Input:
     request: contains the question, response and the keyword
@@ -135,5 +169,24 @@ async def create_item(request: UserRequest):
         return { "status": "failure", "response": "Expected Response required" }
     if request.keyword == None or request.keyword == '':
         return { "status": "failure", "response": "Keyword required for Assertion 2" }
+    #assert_row(request.question, request.expected, request.keyword)
+    return ""
 
-    return { "headers": get_headers(), "items": [assert_row(request.question, request.expected, request.keyword)] }
+@app.post("/grants")
+async def get_list(request: UserRequest):
+    '''
+    Input:
+    request: contains the category, eligibility, and the location
+    Output:
+    returns: list of grants for the requested input
+    '''
+    if request.category == None or len(request.category) == 0:
+        return { "status": "failure", "response": "Category required" }
+    if request.eligibility == None or len(request.eligibility) == 0:
+        return { "status": "failure", "response": "Eligibility required" }
+    if request.location == None or request.location == '':
+        return { "status": "failure", "response": "Location required" }
+    DB = get_db()
+    return DB.all()
+
+

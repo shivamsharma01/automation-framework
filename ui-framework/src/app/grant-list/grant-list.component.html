@@ -1,8 +1,7 @@
 <div class="dark-container">
-  <h2>Grant List</h2>
+  <h2>Matching Grant List Data</h2>
 
   <div class="container-fluid table-container mt-5">
-    <h1>Response Table</h1>
     <div class="row header-row">
       @for (col of headers; track col) {
       <div class="col header-col">{{ col }}</div>
@@ -10,12 +9,11 @@
     </div>
     @for (grant of grants; track grant.id) {
     <div class="row resp-row">
-      <div class="col resp-col">{{ grant.id }}</div>
+      <div class="col resp-col cell-flex">{{ grant.id }}</div>
+      <div class="col resp-col">{{ grant.org }}</div>
       <div class="col resp-col">{{ grant.title }}</div>
       <div class="col resp-col">{{ grant.category }}</div>
-      <div class="col resp-col">{{ grant.startDate }}</div>
-      <div class="col resp-col">{{ grant.endDate }}</div>
-      <div class="col resp-col">{{ grant.fundsAvailable }}</div>
+      <div class="col resp-col">{{ grant.funds }}</div>
     </div>
     }
   </div>

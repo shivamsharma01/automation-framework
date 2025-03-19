@@ -17,19 +17,17 @@ RUN apt-get update && apt-get install -y nginx
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=build-stage /app/dist/ui-framework /usr/share/nginx/html
 
-RUN apt-get update && apt-get install -y chromium-driver
+RUN apt-get update
 
 WORKDIR /app
 COPY backend-server/ /app
 RUN pip install --upgrade pip
 RUN pip install numexpr numpy pandas python-dateutil pytz six tzdata pydantic python-multipart tinydb
-RUN pip install uvicorn fastapi fuzzywuzzy spacy scikit-learn python-Levenshtein together
-RUN pip install selenium webdriver_manager chromedriver_autoinstaller
+RUN pip install fastapi requests python-dotenv uvicorn
+RUN pip install spacy rapidfuzz
 RUN python -m spacy download en_core_web_md
-
-ENV mistral_username="aalam.cheema@gmail.com"
-ENV mistral_password="Asurasaurus1!"
-ENV together_api_key="03489e7ac45d4902acc2a923b7cb542971ee3d1c4657f3a9fb29b9f84996b8f7"
+#RUN pip install fuzzywuzzy scikit-learn python-Levenshtein together
+ENV TOGETHER_API_KEY="b66ab0028a8aa847ee0a88d0523f1af93900cef37b29b72c957608cd9f6c1169"
 
 RUN mkdir -p /app/files
 RUN apt autoremove

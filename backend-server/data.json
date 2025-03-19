@@ -1,0 +1,153 @@
+[
+  {
+    "id": 1,
+    "title": "Okta for Good’s Nonprofit Technology Initiative",
+    "org": "Okta",
+    "description": "Okta is a comprehensive identity and access management platform that offers organizations secure single sign-on capabilities, authentication and authorization, password management, user provisioning, security and compliance, and mobile device management.\\nOkta for Good’s Nonprofit Technology Initiative strives to meet nonprofits’ technology needs by supplying $10 million in philanthropic funding. They’re also providing an additional $10 million via in-kind donations of their technology and services. Whether your nonprofit is seeking to improve its data security or move to the cloud, Okta’s focus on digital transformation is worth looking into for any organization interested in technology improvements. \\n",
+    "funds": 10000,
+    "category": "Technology",
+    "eligibility": [
+      "Be a recognized nonprofit organization in their country of operation.",
+      "Have strong leadership teams and mission alignment with Okta."
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Twilio Impact Fund",
+    "org": "Twilio",
+    "description": "Twilio is an SMS and messaging platform that empowers social good organizations to extend their reach. In 2023, an incredible 20,000 organizations used the platform to send over 22 billion messages.\\n\\nThrough its Impact Fund, Twilio awarded $7.3 million in grants and investments to expand access to transformative communications technology for social impact causes last year.",
+    "funds": 15000,
+    "category": "Technology",
+    "eligibility": [
+      "Be a recognized 501(c)(3) nonprofit or have equivalent status.",
+      "Not be a government entity, unregistered social impact initiative, political organization, or for-profit entity.",
+      "Currently, Twilio is funding projects in digital transformation, humanitarian assistance, and climate action. To receive an invitation to apply, sign up for the Impact Access Program, which offers additional benefits such as discounts on Twilio products."
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Google Ad Grants program",
+    "org": "Google",
+    "description": "Since its creation, the Google Ad Grants program has provided over $10 billion in free advertising to nonprofits. All eligible organizations can receive $10,000 monthly to bid on keywords for ads that will appear on Google’s search results pages. With these ads, you can promote key pages on your nonprofit’s website, such as your donation page or event registration page, to generate more support for your cause.",
+    "funds": 10000,
+    "category": "Technology",
+    "eligibility": [
+      "Be a registered 501(c)(3) nonprofit.",
+      "Not be a government, healthcare, or educational institution.",
+      "Have a high-quality website.",
+      "Create a Google for Nonprofits account."
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Institutes for Higher Education Faculty and K-12 Educators",
+    "org": "National Endowment for the Humanities",
+    "description": "Institutes are residential, virtual, and combined format professional development programs that convene higher education faculty or K-12 educators from across the nation to deepen and enrich their understanding of significant topics in the humanities and enrich their capacity for effective scholarship and teaching.",
+    "funds": 30000,
+    "category": "Humanities",
+    "eligibility": [
+      "City or township governments",
+      "Private institutions of higher education",
+      "State governments",
+      "Special district governments",
+      "County governments",
+      "Native American tribal governments (Federally recognized)",
+      "Public and State controlled institutions of higher education",
+      "Nonprofits having a 501(c)(3) status with the IRS, other than institutions of higher education"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Integrating Oral Health and Primary Care in People with HIV using a Learning Collaborative",
+    "org": "Health Resources and Services Administration",
+    "description": "The purpose of the initiative is fund one entity to establish a 24-month virtual Learning Collaborative (LC) to disseminate promising and innovative practices in three areas to improve health outcomes for people with HIV: 1) community-based HIV dental education, 2) oral health and HIV primary care integration, and 3) building and sustaining the next cadre of dental leaders in HIV.",
+    "funds": 600000,
+    "category": "Health",
+    "eligibility": [
+      "public and nonprofit private entities such as institutions of higher education and academic health science centers involved in addressing HIV related issues on a national scope.",
+      "Native American tribal governments and tribal organizations are eligible.",
+      "Community-based organizations are also eligible."
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Behavioral Health Workforce Education and Training Program for Paraprofessionals",
+    "org": "Health Resources and Services Administration",
+    "description": "The purpose of the BHWET Program for Paraprofessionals is to develop and expand community-based experiential training such as field placements and internships to increase the skills, knowledge and capacity of students preparing to become mental health workers, peer support specialists, and other behavioral health paraprofessionals. The program has a special focus on developing knowledge and understanding of the needs of children, adolescents, and transitional-age youth who have experienced trauma and are at risk for behavioral health disorders including anxiety, depression, and substance use disorder. The program also emphasizes developmental opportunities and educational support in interprofessional collaboration by using team-based care in integrated behavioral health and primary care settings to improve the distribution of a well-trained behavioral health workforce. The program also aims to recruit a workforce that is interested in serving high need and high demand areas. For the purpose of this NOFO, all training will be separated into two levels: • Level 1: Pre-service: Includes didactic and experiential field training. • Level 2: In-service (optional): Training at a registered Department of Labor apprenticeship site. All paraprofessional training that does not fall under the definition of a registered apprenticeship will be defined as Level 1: Pre-service training as further explained in Program Requirements and Expectations. Registered apprenticeships (Level 2) are not a program requirement. You are not required to implement Level 2 in your proposal to be considered eligible for this program. If you are implementing Level 2 in your proposed training project, you can receive an additional 5 points in Criteria 2: Response/Approach.",
+    "funds": 10900000,
+    "category": "Health",
+    "eligibility": [
+      "public and nonprofit private entities such as institutions of higher education and academic health science centers involved in addressing HIV related issues on a national scope.",
+      "Native American tribal governments and tribal organizations are eligible.",
+      "Community-based organizations are also eligible."
+    ]
+  },
+  {
+    "id": 7,
+    "title": "NEA Research Grants in the Arts, FY 2026",
+    "org": "National Endowment for the Arts",
+    "description": "Research Grants in the Arts (RGA) support research studies that investigate the value and/or impact of the arts, either as individual components of the U.S. arts ecosystem or as they interact with each other and/or with other domains of American life.",
+    "funds": 1025000,
+    "category": "Arts",
+    "eligibility": [
+      "public and nonprofit private entities such as institutions of higher education and academic health science centers involved in addressing HIV related issues on a national scope.",
+      "Native American tribal governments and tribal organizations are eligible.",
+      "Community-based organizations are also eligible."
+    ]
+  },
+  {
+    "id": 8,
+    "title": "GRANT OPPORTUNITY 2024/2025: Statement of Interest",
+    "org": "U.S. Mission to Malta",
+    "description": "The U.S. Embassy in Malta of the U.S. Department of State announces an open competition for organizations and/or individuals to submit a Statement of Interest (SOI) to carry out a program to support one or more of the objectives described below. The U.S. Embassy will accept proposals for funding under the Embassy’s Public Diplomacy Grants program in the period from November 2024 to June 2025. The submission of a Statement of Interest is the first step in a two-part process. A SOI is not a full proposal. A SOI is a concise concept note designed to clearly communicate a program idea and its objectives before the development of a full proposal application. The purpose of the SOI process is to allow applicants the opportunity to submit program ideas for evaluation prior to requiring the development of full proposal applications. Upon a merit review of eligible SOIs, U.S. Embassy Valletta will inform selected applicants through a Notice of Award and invite them to comply with the full Grants Application Process. Funding will support projects that have a significant connection to U.S. Embassy mission goals and that highlight shared values, promote bilateral cooperation, and enhance understanding of the United States in Malta. Competitive projects will advance priorities in the U.S.-Malta bilateral relationship and increase positive public exposure for the U.S. Embassy. All proposals are required to have a clear connection to the United States, either through U.S. organizations, experts, and/or best practices to increase the awareness and understanding of U.S. perspectives, policies, and society. Proposals without a significant U.S. connection will not be considered for funding.",
+    "funds": 10000,
+    "category": "Arts",
+    "eligibility": [
+      "Individuals",
+      "Nonprofits having a 501(c)(3) status with the IRS, other than institutions of higher education"
+    ]
+  },
+  {
+    "id": 9,
+    "title": "AFCP 2025 Small Grants Competition",
+    "org": "U.S. Mission to Egypt",
+    "description": "The Cultural Affairs Office of the U.S. Embassy in Cairo is now accepting project abstracts for the Ambassadors Fund for Cultural Preservation (AFCP) 2025 Large Grants Competition. AFCP Large Grants range from a floor of $200,000 to a maximum of $800,000 per project. The establishment clause of the U.S. Constitution permits the government to include religious objects and sites within an aid program under certain conditions. For example, an item with a religious connection (including a place of worship) may be the subject of a cultural preservation grant if the item derives its primary significance and is nominated solely on the basis of architectural, artistic, historical, or other cultural (not religious) criteria. ECA encourages embassies considering preservation projects with a religious connection to contact the AFCP Program Director.",
+    "funds": 800000,
+    "category": "Arts",
+    "eligibility": [
+      "Nonprofits having a 501(c)(3) status with the IRS, other than institutions of higher education",
+      "County governments",
+      "City or township governments",
+      "State governments"
+    ]
+  },
+  {
+    "id": 10,
+    "title": "2025 Pacific Northwest Bay Watershed Education and Training",
+    "org": "DOC NOAA - ERA Production",
+    "description": "The Pacific Northwest Bay Watershed Education and Training (B-WET) program is an environmental education program that supports locally relevant, authentic experiential learning in the K-12 environment. Funded projects provide Meaningful Watershed Educational Experiences (MWEEs; defined below) for students, related professional development for teachers, and help to support regional education and environmental priorities in the Pacific Northwest. The primary delivery is through competitive grants.\\nThe FY25 Pacific Northwest B-WET funding announcement focuses on the following priority areas:1) Systemic classroom-integrated Meaningful Watershed Educational Experiences (MWEEs) for K-12 students that promote climate resilience and include high-quality teacher professional development related to the MWEEs; and\\n2) Meaningful Watershed Educational ExperiencesMWEEs) for K-12 students that appropriately involve Indigenous Knowledge and promote climate resilience.\\nFor Pacific Northwest B-WET, applicants may be physically located in any U.S. state; however, education projects must target teachers and/or students in the Pacific Northwest region. For the purposes of this solicitation, the Pacific Northwest region is defined as Oregon and Washington.\\nThis funding opportunity meets NOAA's Vision of healthy ecosystems (http://www.noaa.gov/our-mission-and-vision), helping to ensure that ocean, estuarine, and related ecosystems and the species that inhabit them are vibrant and sustainable in the face of challenges.\\nApplicant organizations must complete and maintain three registrations to be eligible to apply for or receive an award. These registrations include SAM.gov, Grants.gov, and eRA Commons. All registrations must be completed prior to the application being submitted. The complete registration process for all three systems can take 4 to 6 weeks, so applicants should begin this activity as soon as possible. If an eligible applicant does not have access to the internet, please contact the Agency Contacts listed in Section VII for submission instructions.\\nPrior to registering with eRA Commons, applicant organizations must first obtain a Unique Entity Identifier (UEI) from SAM.gov, if needed (refer to Section IV. Applications and Submission Information, Section C). Organizations can register with eRA Commons in tandem with completing their full SAM and Grants.gov registrations; however, all registrations must be in place by time of application submission. eRA Commons requires organizations to identify at least one Signing Official (SO) and at least one Program Director/Principal Investigator (PD/PI) account in order to submit an application.",
+    "funds": 750000,
+    "category": "Environment",
+    "eligibility": [
+      "Nonprofits having a 501(c)(3) status with the IRS, other than institutions of higher education",
+      "County governments",
+      "City or township governments",
+      "State governments"
+    ]
+  },
+  {
+    "id": 11,
+    "title": "Environmental Health Sciences Core Centers Program (P30 Clinical Trials Optional)",
+    "org": "National Institutes of Health",
+    "description": "This Notice of Funding Opportunity Announcement (NOFO) invites grant applications for Environmental Health Sciences Core Centers (EHSCC). As intellectual hubs for environmental health science research, the EHSCC's are expected to be the thought leaders for the field and advance the goals of the 2025-2029 NIEHS Strategic Plan (http://www.niehs.nih.gov/about/strategicplan/). The Core Centers provide critical research infrastructure, shared facilities, services and/or resources, to groups of investigators conducting environmental health sciences research. An EHSCC enables researchers to conduct their independently-funded individual and/or collaborative research projects more efficiently and/or more effectively. The overall goal of an EHSCC is to identify and capitalize on emerging issues that advance improving the understanding of the relationships among environmental exposures, human biology, and disease. The EHSCC supports community engagement and translational research as key approaches to improving public health.",
+    "funds": 750000,
+    "category": "Environment",
+    "eligibility": [
+      "Small businesses",
+      "Nonprofits having a 501(c)(3) status with the IRS, other than institutions of higher education",
+      "County governments",
+      "City or township governments",
+      "State governments"
+    ]
+  }
+]

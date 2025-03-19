@@ -1,23 +1,20 @@
 export class GrantListResponse {
   id: number;
+  org: string;
   title: string;
   category: string;
-  startDate: string;
-  endDate: string;
-  fundsAvailable: number;
+  funds: number;
   constructor(
     id: number,
+    org: string,
     title: string,
     category: string,
-    startDate: string,
-    endDate: string,
-    fundsAvailable: number
+    funds: number
   ) {
     this.id = id;
+    this.org = org;
     this.title = title;
     this.category = category;
-    this.startDate = startDate;
-    this.endDate = endDate;
-    this.fundsAvailable = fundsAvailable;
+    this.funds = funds;
   }
 }
