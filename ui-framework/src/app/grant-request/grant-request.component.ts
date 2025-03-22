@@ -34,7 +34,6 @@ export class GrantRequestComponent implements OnInit {
     this.grantForm = new FormGroup({
       category: new FormControl('All', [Validators.required]),
       eligibility: new FormControl('All', [Validators.required]),
-      location: new FormControl('All', [Validators.required]),
     });
     this.eligibilityTypes = this.formDataService.getEligibilityOptions();
     this.categories = this.formDataService.getCategoryOptions();
@@ -44,8 +43,7 @@ export class GrantRequestComponent implements OnInit {
   onSubmit() {
     const requestData = {
       category: this.grantForm.value.category,
-      eligibility: this.grantForm.value.eligibility,
-      location: this.grantForm.value.location,
+      eligibility: this.grantForm.value.eligibility
     };
 
     this.grantService.fetchGrants(requestData).subscribe({
