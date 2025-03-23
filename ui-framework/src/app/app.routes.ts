@@ -5,6 +5,7 @@ import { GrantRequestComponent } from './grant-request/grant-request.component';
 import { GrantListComponent } from './grant-list/grant-list.component';
 import { GrantDetailsComponent } from './grant-details/grant-details.component';
 import { GrantApplicationComponent } from './grant-application/grant-application.component';
+import { GrantResponse } from './grant-response.dto';
 
 export const routes: Routes = [
   {
@@ -20,8 +21,9 @@ export const routes: Routes = [
         component: GrantListComponent,
       },
       {
-        path: 'grant-details',
+        path: 'grant-details/:id',
         component: GrantDetailsComponent,
+        data: GrantResponse,
       },
       {
         path: 'grant-application',

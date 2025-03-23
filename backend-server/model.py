@@ -38,6 +38,8 @@ def generate_grant_application(grant_id, user_details):
     10. References
 
     Format the application as a professional document. Include placeholders for any missing information.
+    An effective grant application clearly defines your nonprofit’s needs, leverages storytelling to convey your impact, and specifies realistic goals for the funding you’re requesting.
+    You craft a need statement that (1) aligns with the grant-making agency’s funding opportunity announcement; (2) communicates your organization’s experience with restoration projects; and (3) includes several concise – but compelling – anecdotes illustrating the need for restoration.
     """
 
     API_KEY = os.getenv("TOGETHER_API_KEY")

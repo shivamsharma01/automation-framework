@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { GrantListResponse } from './grant-list-response.dto';
+import { GrantResponse } from './grant-response.dto';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class GrantService {
 
   constructor(private http: HttpClient) {}
 
-  fetchGrants(data: any): Observable<GrantListResponse[]> {
-    return this.http.post<GrantListResponse[]>(this.apiUrl, data);
+  fetchGrants(data: any): Observable<GrantResponse[]> {
+    return this.http.post<GrantResponse[]>(this.apiUrl, data);
   }
 }

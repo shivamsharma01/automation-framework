@@ -1,0 +1,16 @@
+numexpr
+numpy
+pandas
+python-dateutil
+pytz
+six
+tzdata
+pydantic
+python-multipart
+tinydb
+fastapi
+requests
+python-dotenv
+uvicorn
+spacy
+#rapidfuzz

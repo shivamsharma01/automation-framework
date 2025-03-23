@@ -9,7 +9,13 @@
     </div>
     @for (grant of grants; track grant.id) {
     <div class="row resp-row">
-      <div class="col resp-col cell-flex">{{ grant.id }}</div>
+      <div class="col resp-col cell-flex id-col">
+        <a
+          [routerLink]="['/homepage/grant-details', grant.id]"
+          [state]="{ grant }"
+          >{{ grant.id }}</a
+        >
+      </div>
       <div class="col resp-col">{{ grant.org }}</div>
       <div class="col resp-col">{{ grant.title }}</div>
       <div class="col resp-col">{{ grant.category }}</div>

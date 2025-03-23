@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { GrantListResponse } from '../grant-list-response.dto';
-import { Router } from '@angular/router';
+import { GrantResponse } from '../grant-response.dto';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-grant-list',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './grant-list.component.html',
   styleUrl: './grant-list.component.css',
 })
@@ -18,7 +18,7 @@ export class GrantListComponent {
     'Funds Available',
   ];
 
-  grants: GrantListResponse[] = [];
+  grants: GrantResponse[] = [];
 
   constructor(private router: Router) {
     const navigation = this.router.getCurrentNavigation();
@@ -28,23 +28,5 @@ export class GrantListComponent {
   }
 
   ngOnInit() {
-    if (!this.grants || this.grants.length === 0) {
-      this.grants = [
-        {
-          id: 1,
-          org: 'Org 1',
-          title: 'Grant 1',
-          category: 'Category 1',
-          funds: 1000,
-        },
-        {
-          id: 2,
-          org: 'Org 2',
-          title: 'Grant 2',
-          category: 'Category 2',
-          funds: 2000,
-        },
-      ];
-    }
   }
 }
