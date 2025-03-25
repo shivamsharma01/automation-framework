@@ -7,11 +7,21 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class GrantService {
-  private apiUrl = 'http://localhost/api/grants';
+  private apiUrl = 'http://localhost/api';
 
   constructor(private http: HttpClient) {}
 
   fetchGrants(data: any): Observable<GrantResponse[]> {
-    return this.http.post<GrantResponse[]>(this.apiUrl, data);
+    return this.http.post<GrantResponse[]>(this.apiUrl + '/grants', data);
+  }
+
+  fetchGrantApplicationForm(
+    grantId: number,
+    data: any
+  ): Observable<{ data: string; status: number }> {
+    return this.http.post<any>(
+      this.apiUrl + `/generate/grant/${grantId}/form`,
+      data
+    );
   }
 }

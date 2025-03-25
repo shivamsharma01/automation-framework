@@ -1,107 +1,125 @@
-<h1>Grant Details</h1>
-<div class="container">
-  <h2>{{ grant.title }}</h2>
-  <h3>Offered by: {{ grant.org }}</h3>
-  <p class="formatted-text">{{ grant.description }}</p>
+<div class="container-fluid box">
+  <h1 class="text-center my-3">Grant Details</h1>
+  <div class="container">
+    <h2>{{ grant.title }}</h2>
+    <h3>Offered by: {{ grant.org }}</h3>
+    <p class="formatted-text">{{ grant.description }}</p>
 
-  <h4>Funds Available: ${{ grant.funds }}</h4>
-  <h4>Category: {{ grant.category }}</h4>
+    <h4>Funds Available: ${{ grant.funds }}</h4>
+    <h4>Category: {{ grant.category }}</h4>
 
-  <h5>Eligibility Criteria:</h5>
-  <ul>
-    <li *ngFor="let criteria of grant.eligibility">{{ criteria }}</li>
-  </ul>
+    <h5>Eligibility Criteria:</h5>
+    <ul>
+      <li *ngFor="let criteria of grant.eligibility">{{ criteria }}</li>
+    </ul>
 
-  <hr />
+    <hr />
 
-  <form [formGroup]="grantForm" (ngSubmit)="onSubmit()">
-    <h2>Apply for this Grant</h2>
+    <form [formGroup]="grantForm" (ngSubmit)="onSubmit()">
+      <h2>Apply for this Grant</h2>
 
-    <div class="form-group">
-      <label>Full Name</label>
-      <input type="text" formControlName="fullName" class="form-control" />
-    </div>
-
-    <div class="form-group">
-      <label>Email</label>
-      <input
-        type="email"
-        formControlName="email"
-        class="form-control"
-        required
-      />
-      <div
-        *ngIf="
-          grantForm.controls.email.invalid && grantForm.controls.email.touched
-        "
-        class="error"
-      >
-        Email is required.
+      <div class="form-group my-3">
+        <label>Full Name</label>
+        <input type="text" formControlName="fullName" class="form-control" />
       </div>
-    </div>
 
-    <div class="form-group">
-      <label>Organization Name</label>
-      <input
-        type="text"
-        formControlName="organizationName"
-        class="form-control"
-      />
-    </div>
-
-    <div class="form-group">
-      <label>Project Name</label>
-      <input type="text" formControlName="projectName" class="form-control" />
-    </div>
-
-    <div class="form-group">
-      <label>Purpose</label>
-      <textarea formControlName="purpose" class="form-control"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>Funding Amount ($)</label>
-      <input
-        type="number"
-        formControlName="fundingAmount"
-        class="form-control"
-        required
-      />
-      <div
-        *ngIf="
-          grantForm.controls.fundingAmount.invalid &&
-          grantForm.controls.fundingAmount.touched
-        "
-        class="error"
-      >
-        Funding amount is required.
+      <div class="form-group my-3">
+        <label>Email</label>
+        <input
+          type="email"
+          formControlName="email"
+          class="form-control"
+          required
+        />
+        <div
+          *ngIf="
+            grantForm.controls.email.invalid && grantForm.controls.email.touched
+          "
+          class="error"
+        >
+          Email is required.
+        </div>
       </div>
+
+      <div class="form-group my-3">
+        <label>Organization Name</label>
+        <input
+          type="text"
+          formControlName="organizationName"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group my-3">
+        <label>Project Name</label>
+        <input type="text" formControlName="projectName" class="form-control" />
+      </div>
+
+      <div class="form-group my-3">
+        <label>Purpose</label>
+        <textarea formControlName="purpose" class="form-control"></textarea>
+      </div>
+
+      <div class="form-group my-3">
+        <label>Funding Amount ($)</label>
+        <input
+          type="text"
+          formControlName="fundingAmount"
+          class="form-control"
+          required
+        />
+        <div
+          *ngIf="
+            grantForm.controls.fundingAmount.invalid &&
+            grantForm.controls.fundingAmount.touched
+          "
+          class="error"
+        >
+          Funding amount is required.
+        </div>
+      </div>
+
+      <h3 class="my-5">Additional Details (Optional)</h3>
+
+      <div class="form-group my-3">
+        <label>Expected Outcomes</label>
+        <textarea
+          formControlName="expectedOutcomes"
+          class="form-control"
+        ></textarea>
+      </div>
+
+      <div class="form-group my-3">
+        <label>Target Audience</label>
+        <textarea
+          formControlName="targetAudience"
+          class="form-control"
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary my-5"
+        [disabled]="grantForm.invalid || submitted"
+      >
+        Generate AI-Powered Report
+      </button>
+    </form>
+  </div>
+  @if (isLoading) {
+    <div class="d-flex align-items-center">
+      <strong>Loading...</strong>
+      <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
     </div>
-
-    <h3>Additional Details (Optional)</h3>
-
-    <div class="form-group">
-      <label>Expected Outcomes</label>
-      <textarea
-        formControlName="expectedOutcomes"
-        class="form-control"
-      ></textarea>
+  } 
+  <div class="my-5" *ngIf="submitted">
+   @if (isError) {
+    <p style="color: red">An Error Occured</p>
+    } @else {
+    <h2 class="text-center my-3">AI-Powered Report</h2>
+    <div class="container">
+      <app-display-grant-form [response]="response"></app-display-grant-form>
     </div>
-
-    <div class="form-group">
-      <label>Target Audience</label>
-      <textarea
-        formControlName="targetAudience"
-        class="form-control"
-      ></textarea>
-    </div>
-
-    <button
-      type="submit"
-      class="btn btn-primary"
-      [disabled]="grantForm.invalid"
-    >
-      Generate AI-Powered Report
-    </button>
-  </form>
+    }
+  </div>
 </div>

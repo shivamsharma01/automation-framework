@@ -26,6 +26,8 @@ COPY --from=build-stage /app/dist/ui-framework /usr/share/nginx/html
 # Set up FastAPI backend
 WORKDIR /app
 
+ENV TOGETHER_API_KEY="b66ab0028a8aa847ee0a88d0523f1af93900cef37b29b72c957608cd9f6c1169"
+
 # Install dependencies first to leverage caching
 COPY backend-server/requirements.txt .
 RUN pip install --upgrade pip \

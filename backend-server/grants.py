@@ -1,9 +1,15 @@
 import spacy
 from db import get_db
+from tinydb import Query
 # from rapidfuzz import process, fuzz
 
 nlp = spacy.load("en_core_web_md")
- 
+
+def find_grant_by_id(grant_id):
+    DB = get_db()
+    rows = DB.search(Query().id == grant_id)
+    return rows[0] if rows else None
+
 def find_best_matches_for_eligibility_list(input_list):
     DB = get_db()
     grants = DB.all()

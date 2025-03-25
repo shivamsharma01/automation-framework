@@ -8,6 +8,7 @@ export class FormDataService {
 
   getEligibilityOptions() {
     return [
+      'All (if the grant is universally open to any entity meeting specific guidelines)',
       'Legally recognized non-profit organizations',
       'Non-governmental organizations (NGOs)',
       'Think tanks and research institutions',
@@ -28,12 +29,12 @@ export class FormDataService {
       'Public-private partnerships with a nonprofit or social mission',
       'Government-affiliated entities with non-profit missions (e.g., public hospitals, libraries)',
       'Other organizations meeting the eligibility criteria as specified by the grant',
-      'All (if the grant is universally open to any entity meeting specific guidelines)',
     ];
   }
 
   getCategoryOptions() {
     return [
+      'All',
       'Nonprofit Capacity Building Grants',
       'Digital Transformation & Innovation Grants',
       'Fundraising Technology & CRM Grants',
@@ -55,8 +56,6 @@ export class FormDataService {
       'Advocacy & Policy Change Grants',
       'International Development & Global Outreach Grants',
       'Youth & Early Childhood Development Grants',
-      'All',
     ];
   }
-
 }

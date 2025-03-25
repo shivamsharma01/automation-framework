@@ -31,8 +31,8 @@ export class GrantRequestComponent implements OnInit {
 
   ngOnInit() {
     this.grantForm = new FormGroup({
-      category: new FormControl('All', [Validators.required]),
-      eligibility: new FormControl('All', [Validators.required]),
+      category: new FormControl('', [Validators.required]),
+      eligibility: new FormControl('', [Validators.required]),
     });
     this.eligibilityTypes = this.formDataService.getEligibilityOptions();
     this.categories = this.formDataService.getCategoryOptions();

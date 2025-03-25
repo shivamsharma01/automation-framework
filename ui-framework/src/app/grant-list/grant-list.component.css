@@ -1,8 +1,18 @@
 .table-container {
-  background-color: white;
-  color: black;
+  color: white;
+  font-size: 24px;
   border-radius: 5px;
   padding: 20px;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+
+.resp-row {
+  padding: 10px 0;
 }
 
 .resp-col {
@@ -15,3 +25,4 @@
   justify-content: flex-end;
   align-items: center;
 }
+
