@@ -51,7 +51,7 @@ export class GrantDetailsComponent {
         [Validators.required]
       ),
       fundingAmount: new FormControl(
-        '$10,000,000 (philanthropic funding) + $10,000,000 (in-kind donations)',
+        '$10,000 (philanthropic funding) + $10,000 (in-kind donations)',
         [Validators.required]
       ),
       expectedOutcomes: new FormControl(

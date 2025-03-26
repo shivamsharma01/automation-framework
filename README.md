@@ -15,7 +15,7 @@ This repository contains a Docker-based automation framework. The framework is b
 To build the Docker image, use the following command:
 
 ```bash
-docker build -t shivamshivam01/aib:automation-framework .
+docker build -t shivamshivam01/otg:automation-framework .
 ```
 
 ### 2. Push Docker Image
@@ -23,7 +23,7 @@ docker build -t shivamshivam01/aib:automation-framework .
 After building the image, push it to Docker Hub using:
 
 ```bash
-docker push shivamshivam01/aib:automation-framework
+docker push shivamshivam01/otg:automation-framework
 ```
 
 ### 3. Pull Docker Image
@@ -31,7 +31,7 @@ docker push shivamshivam01/aib:automation-framework
 To pull the Docker image from Docker Hub, use:
 
 ```bash
-docker pull shivamshivam01/aib:automation-framework
+docker pull shivamshivam01/otg:automation-framework
 ```
 
 ### 4. Run Docker Container
@@ -39,14 +39,14 @@ docker pull shivamshivam01/aib:automation-framework
 Run the Docker container with the following command:
 
 ```bash
-docker run -d -p 80:80 -p 8000:8000 shivamshivam01/aib:automation-framework
+docker run -d -p 80:80 -p 8000:8000 shivamshivam01/otg:automation-framework
 ```
 
 This command will run the container in detached mode and map port `80` and `8000` on your local machine to the same ports inside the container.
 
 
 ### 5. Start Application
-
+(not needed when running the application through docker- step4)
 To start the application, execute the following command:
 
 ```bash
